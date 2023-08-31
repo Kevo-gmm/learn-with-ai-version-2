@@ -5,13 +5,9 @@ import os from "os";
 import { Configuration, OpenAIApi } from "openai";
 
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ path: ".env.local" });
 
 const router = express.Router();
-
-const configuration = new Configuration({ apiKey: process.env.OPEN_API_KEY });
-const openai = new OpenAIApi(configuration);
-
 router.post("/whisper", async (req: any, res: any) => {
   try {
     const { audio } = req.body;
@@ -19,7 +15,7 @@ router.post("/whisper", async (req: any, res: any) => {
       return res.status(400).json({ error: "No audio file provided. Please provide an audio file to continue" });
     }
 
-    const audioBuffer = Buffer.from(audio, "base64"); // Decode base64 to buffer
+    const audioBuffer = Buffer.from(audio, "base64");
     const tempFilePath = path.join(os.tmpdir(), `temp_audio_${Date.now()}.webm`); // Create temp file path
     fs.writeFileSync(tempFilePath, audioBuffer); // Write buffer to temp file
 
